@@ -108,7 +108,7 @@ def _scrub_child_env(source_env, is_passthrough=None, is_windows=None):
 def _build_child_env(*, rpc_endpoint: str, rpc_token: str, tmpdir: str,
                      child_python: str) -> Dict[str, str]:
     """Build the scrubbed child environment both execution paths share."""
-    from hermes_constants import apply_subprocess_home_env
+    from hermes_constants import apply_subprocess_home_env, get_hermes_home_override
     child_env = _scrub_child_env(os.environ)
     child_env["HERMES_RPC_SOCKET"] = rpc_endpoint
     child_env["HERMES_RPC_TOKEN"] = rpc_token
@@ -123,6 +123,11 @@ def _build_child_env(*, rpc_endpoint: str, rpc_token: str, tmpdir: str,
         child_env["TZ"] = _tz_name
     child_env.pop("HERMES_TIMEZONE", None)
     apply_subprocess_home_env(child_env)
+    # Shared gateways keep the launch profile in os.environ; child scripts
+    # must use the same context-local home as the active turn (#110303).
+    home_override = get_hermes_home_override()
+    if home_override:
+        child_env["HERMES_HOME"] = home_override
     # PYTHONPATH: the staging dir (hermes_tools.py) must always be importable even when project
     # mode changes CWD. Hermes's root is added ONLY when the child runs in Hermes's Python env —
     # exposing Hermes's site-packages to an external interpreter can mix incompatible compiled
