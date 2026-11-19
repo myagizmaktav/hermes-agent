@@ -1666,8 +1666,8 @@ _CODEX_OAUTH_CONTEXT_FALLBACK: dict[str, int] = {
 # The bump fires ONLY when the resolved value is exactly the stale 272,000. ``gpt-5.6`` and the gpt-6
 # tiers are FAMILY PREFIXES so dated snapshots (``gpt-6-sol-2026-09-22``) inherit the bump (``-pro`` slugs
 # aren't routable on Codex); ``gpt-5.4`` is EXACT because gpt-5.4-mini enforces 272K. The gpt-6 tiers
-# carry the 5.6 verdict forward: they replace Sol/Terra/Luna on the same Codex route, and the live
-# catalog's ``max_context_window`` still caps the bump (#105443) if it publishes a lower ceiling.
+# replace Sol/Luna on the same Codex route. Live 2026-09-28 (#126483): gpt-6-sol 909,312 input OK, ~995K
+# rejected; gpt-6-luna 689,512 OK (ceiling unprobed: Sol/5.6 verdict). Catalog max still caps it (#105443).
 _CODEX_OAUTH_VERIFIED_ABOVE_ADVERTISED_PREFIXES: dict[str, int] = {
     "gpt-5.6": 900_000, "gpt-6-sol": 900_000, "gpt-6-luna": 900_000,
 }
